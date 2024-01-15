@@ -1,2 +1,3 @@
 *.onion
 onions
+.env
