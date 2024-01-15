@@ -6,6 +6,9 @@
 
 ## Setup
 - Generate an onion for the master server using `mkp224o`.
+- Add variables to `.env` (see descriptions further down):
+    - MASTER_ONION
+    - ADMIN_TOKEN
 - Run one instance of the master node: `docker compose -f master.yml up -d`.
     - This can be run anywhere
     - The `onions` directory will contain onion configurations found by the workers.
