@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  master:
+    image: tor-vanity-master:latest
+    build:
+      context: .
+      dockerfile: master.Dockerfile
+    volumes:
+      - "./$MASTER_ONION:/var/lib/tor/hidden_service"
+      - "./onions:/app/onions"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ADMIN_TOKEN=$ADMIN_TOKEN
+  worker:
+    image: tor-vanity-worker:latest
+    build:
+      context: .
+      dockerfile: worker.Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MASTER_ONION=$MASTER_ONION
+    deploy:
+      mode: replicated
+      replicas: 6
