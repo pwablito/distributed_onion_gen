@@ -5,6 +5,7 @@ import os
 import zipfile
 import tempfile
 import shutil
+import pathlib
 
 app = Flask(__name__)
 
@@ -31,6 +32,13 @@ def not_implemented_response() -> Response:
     return error_response("Not implemented", 501)
 
 
+def get_found_onions():
+    onions = []
+    for f in pathlib.Path("onions").iterdir():
+        onions.append(f.name)
+    return onions
+
+
 @app.route("/status")
 def get_status():
     return success_response({"status": "ok"})
@@ -49,7 +57,6 @@ def manage_filters():
 
 @app.route("/found", methods=["POST"])
 def found_onion():
-    # TODO get onion from request, unpackage
     zip_content = base64.b64decode(request.json["zipfile"].encode())
     with tempfile.TemporaryDirectory() as tempdir:
         os.mkdir(f"{tempdir}/onion")
@@ -73,13 +80,20 @@ def found_onion():
 @app.route("/")
 def index():
     return f"""
-        <form method="post" action="/filters">
-            <label for="token">Token:</label>
-            <input type=text name=token label="test">
-            <label for="filters">Filters:</label>
-            <textarea rows="3" name="filters">{",".join(state["filters"])}</textarea>
-            <input type=submit value=Submit>
-        </form>
+    <html>
+        <body>
+            <form method="post" action="/filters">
+                <label for="token">Token:</label>
+                <input type=text name=token label="test">
+                <label for="filters">Filters:</label>
+                <textarea rows="3" name="filters">{",".join(state["filters"])}</textarea>
+                <input type=submit value=Submit>
+            </form>
+            <ul>
+                {"".join(map(lambda onion: "<li>"+onion+"</li>", sorted(get_found_onions())))}
+            </ul>
+        </body>
+    </html
     """
 
 if __name__ == "__main__":
