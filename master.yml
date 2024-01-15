@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  master:
+    image: onion-gen-master:latest
+    build:
+      context: .
+      dockerfile: master.Dockerfile
+    restart: always
+    volumes:
+      - "./$MASTER_ONION:/var/lib/tor/hidden_service"
+      - "./onions:/app/onions"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ADMIN_TOKEN=$ADMIN_TOKEN

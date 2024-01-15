@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  worker:
+    image: onion-gen-worker:latest
+    build:
+      context: .
+      dockerfile: worker.Dockerfile
+    restart: always
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MASTER_ONION=$MASTER_ONION
+    deploy:
+      mode: replicated
+      replicas: 6
