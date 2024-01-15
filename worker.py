@@ -26,23 +26,25 @@ def upload_onion(path):
             body = {
                 "zipfile": base64.b64encode(f.read()).decode()
             }
-    while True:
+    for _ in range(5):
         try:
             session.post(f"http://{server_host}:{server_port}/found", json=body)
             return
         except requests.exceptions.ConnectionError:
             time.sleep(10)
             print("Failed to connect to master, trying again shortly...")
+    exit("Failed to connect too many times. Exiting now.")
 
 
 def get_filters():
-    while True:
+    for _ in range(5):
         try:
             res = session.get(f"http://{server_host}:{server_port}/filters")
             return res.json()["filters"]
         except requests.exceptions.ConnectionError:
             time.sleep(10)
             print("Failed to connect to master, trying again shortly...")
+    exit("Failed to connect too many times. Exiting now.")
 
 
 def generate_onion(filters, timeout=60):

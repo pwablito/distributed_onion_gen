@@ -6,6 +6,7 @@ services:
     build:
       context: .
       dockerfile: master.Dockerfile
+    restart: always
     volumes:
       - "./$MASTER_ONION:/var/lib/tor/hidden_service"
       - "./onions:/app/onions"
@@ -17,6 +18,7 @@ services:
     build:
       context: .
       dockerfile: worker.Dockerfile
+    restart: always
     environment:
       - PYTHONUNBUFFERED=1
       - MASTER_ONION=$MASTER_ONION
