@@ -12,4 +12,4 @@ services:
       - MASTER_ONION=$MASTER_ONION
     deploy:
       mode: replicated
-      replicas: 6
+      replicas: 1
